@@ -1,0 +1,1042 @@
+:root {
+  --guide-appear-ms: 180ms;
+  --guide-disappear-ms: 180ms;
+}
+
+.presentation-guide-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 10000;
+  pointer-events: none;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.presentation-guide-layer[hidden] {
+  display: none;
+}
+
+.guide-scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at var(--guide-glow-x, 50%) var(--guide-glow-y, 50%),
+      rgba(162, 124, 255, 0.13),
+      rgba(5, 5, 5, 0.12) 34%,
+      rgba(5, 5, 5, 0.36) 100%);
+  opacity: 0.92;
+}
+
+.guide-frame {
+  --guide-frame-color: #d8c8ff;
+  --guide-frame-width: 2px;
+  --guide-frame-radius: 8px;
+  --guide-glow-color: 158, 104, 255;
+  --guide-glow-spread: 26px;
+  --guide-glow-intensity: 0.72;
+  --guide-outer-display: none;
+  --guide-outer-color: #ffffff;
+  --guide-outer-width: 1px;
+  --guide-outer-radius: 12px;
+  --guide-outer-gap: 6px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 80px;
+  height: 42px;
+  border: var(--guide-frame-width) solid var(--guide-frame-color);
+  border-radius: var(--guide-frame-radius);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.72),
+    0 0 var(--guide-glow-spread) rgba(var(--guide-glow-color), var(--guide-glow-intensity)),
+    inset 0 0 18px rgba(var(--guide-glow-color), 0.16);
+  opacity: 1;
+  transition:
+    left var(--guide-appear-ms) ease,
+    top var(--guide-appear-ms) ease,
+    width var(--guide-appear-ms) ease,
+    height var(--guide-appear-ms) ease,
+    opacity var(--guide-disappear-ms) ease;
+  z-index: 2;
+}
+
+.guide-frame::after {
+  position: absolute;
+  inset: calc(-1 * (var(--guide-outer-gap) + var(--guide-outer-width)));
+  display: var(--guide-outer-display);
+  border: var(--guide-outer-width) solid var(--guide-outer-color);
+  border-radius: var(--guide-outer-radius);
+  content: "";
+  pointer-events: none;
+}
+
+.guide-card,
+.guide-detail {
+  --guide-card-border-width: 1px;
+  --guide-card-border-color: rgba(216, 200, 255, 0.74);
+  --guide-card-radius: 8px;
+  --guide-card-bg: rgba(19, 18, 30, 0.96);
+  position: absolute;
+  border: var(--guide-card-border-width) solid var(--guide-card-border-color);
+  border-radius: var(--guide-card-radius);
+  background: var(--guide-card-bg);
+  color: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.62);
+  opacity: 1;
+  transition:
+    left var(--guide-appear-ms) ease,
+    top var(--guide-appear-ms) ease,
+    opacity var(--guide-disappear-ms) ease;
+  z-index: 3;
+}
+
+.guide-focus-drag {
+  position: absolute;
+  z-index: 4;
+  display: none;
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(246, 242, 255, 0.68);
+  border-radius: 50%;
+  background: rgba(12, 11, 18, 0.42);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.54),
+    0 6px 18px rgba(0, 0, 0, 0.34);
+  cursor: grab;
+  touch-action: none;
+}
+
+.guide-focus-drag::before,
+.guide-focus-drag::after {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background: rgba(246, 242, 255, 0.78);
+  content: "";
+  transform: translate(-50%, -50%);
+}
+
+.guide-focus-drag::before {
+  width: 10px;
+  height: 1px;
+}
+
+.guide-focus-drag::after {
+  width: 1px;
+  height: 10px;
+}
+
+.guide-card {
+  --guide-title-color: #ffffff;
+  --guide-title-size: 18px;
+  --guide-copy-color: rgba(255, 255, 255, 0.78);
+  --guide-copy-size: 13px;
+  width: 420px;
+  max-width: 420px;
+  padding: 14px 15px 13px;
+}
+
+.guide-kicker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+  color: #d8c8ff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.guide-title {
+  margin: 0 0 7px;
+  color: var(--guide-title-color);
+  font-size: var(--guide-title-size);
+  line-height: 1.16;
+}
+
+.guide-copy {
+  margin: 0;
+  color: var(--guide-copy-color);
+  font-size: var(--guide-copy-size);
+  line-height: 1.45;
+  white-space: pre-line;
+}
+
+.guide-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 8px;
+}
+
+.guide-card-meta[hidden] {
+  display: none;
+}
+
+.guide-card-emoji {
+  display: grid;
+  min-width: 22px;
+  height: 22px;
+  place-items: center;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.guide-card-image {
+  display: block;
+  width: 100%;
+  max-height: 210px;
+  margin-top: 10px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.guide-card-image[hidden] {
+  display: none;
+}
+
+.guide-detail {
+  --guide-title-color: #ffffff;
+  --guide-title-size: 13px;
+  --guide-copy-color: rgba(255, 255, 255, 0.82);
+  --guide-copy-size: 12px;
+  --guide-number-color: #ffffff;
+  --guide-number-bg: #9c64fb;
+  width: 285px;
+  padding: 10px 11px;
+}
+
+.guide-frame.is-selected,
+.guide-card.is-selected,
+.guide-detail.is-selected {
+  border-color: rgba(255, 255, 255, 0.96);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.72),
+    0 0 22px rgba(255, 255, 255, 0.4);
+}
+
+.guide-align-menu {
+  position: absolute;
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  border: 1px solid rgba(216, 200, 255, 0.42);
+  border-radius: 8px;
+  background: rgba(13, 11, 19, 0.9);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.42);
+  pointer-events: auto;
+}
+
+.guide-align-menu[hidden] {
+  display: none;
+}
+
+.guide-align-menu button {
+  min-height: 28px;
+  padding: 0 9px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(246, 242, 255, 0.92);
+  cursor: pointer;
+  font: 800 11px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.guide-align-menu button:hover {
+  border-color: rgba(216, 200, 255, 0.52);
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.guide-marquee {
+  position: absolute;
+  z-index: 7;
+  border: 1px solid rgba(216, 200, 255, 0.78);
+  border-radius: 3px;
+  background: rgba(156, 100, 251, 0.16);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.34);
+  pointer-events: none;
+}
+
+.guide-marquee[hidden] {
+  display: none;
+}
+
+.guide-image-drop {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 9;
+  display: grid;
+  min-width: 260px;
+  min-height: 110px;
+  place-items: center;
+  border: 1px dashed rgba(246, 242, 255, 0.78);
+  border-radius: 8px;
+  background: rgba(13, 11, 19, 0.78);
+  color: rgba(246, 242, 255, 0.92);
+  font: 700 18px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.guide-image-drop[hidden] {
+  display: none;
+}
+
+.guide-detail-number {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border-radius: 6px;
+  background: var(--guide-number-bg);
+  color: var(--guide-number-color);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.guide-detail .guide-title {
+  margin-bottom: 5px;
+}
+
+.guide-detail .guide-copy {
+  line-height: 1.35;
+}
+
+.guide-resize {
+  position: absolute;
+  display: none;
+  width: 13px;
+  height: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  background: #9c64fb;
+  box-shadow: 0 0 0 2px rgba(5, 5, 5, 0.72);
+}
+
+.guide-resize.is-nw {
+  left: -8px;
+  top: -8px;
+  cursor: nwse-resize;
+}
+
+.guide-resize.is-ne {
+  right: -8px;
+  top: -8px;
+  cursor: nesw-resize;
+}
+
+.guide-resize.is-sw {
+  left: -8px;
+  bottom: -8px;
+  cursor: nesw-resize;
+}
+
+.guide-resize.is-se {
+  right: -8px;
+  bottom: -8px;
+  cursor: nwse-resize;
+}
+
+.presentation-guide-layer.is-exiting .guide-frame,
+.presentation-guide-layer.is-exiting .guide-card,
+.presentation-guide-layer.is-exiting .guide-detail {
+  opacity: 0;
+}
+
+.guide-text-overlay {
+  position: absolute;
+  z-index: 5;
+  max-width: 90%;
+  pointer-events: none;
+}
+
+.guide-text-overlay-text {
+  display: inline-block;
+  color: #fff;
+  font-weight: 800;
+  line-height: 1.12;
+  white-space: pre-wrap;
+  transform-origin: center center;
+}
+
+body.guide-editing .guide-text-overlay {
+  pointer-events: auto;
+  cursor: move;
+  touch-action: none;
+}
+
+.guide-text-overlay.is-selected {
+  outline: 2px solid rgba(255, 255, 255, 0.92);
+  outline-offset: 4px;
+}
+
+.guide-delete-handle {
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  z-index: 11;
+  display: none;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 14px;
+  background-color: rgba(16, 16, 19, 0.55);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath d='M1.6 1.6l6.8 6.8M8.4 1.6l-6.8 6.8' fill='none' stroke='%23ffffff' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 20px 20px;
+  color: transparent;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  transition: background-color 0.12s ease, border-color 0.12s ease, transform 0.12s ease;
+}
+
+.guide-border-control {
+  --guide-border-value: 0%;
+  position: absolute;
+  top: -50px;
+  z-index: 11;
+  display: none;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 14px;
+  background: rgba(16, 16, 19, 0.55);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45);
+  cursor: ew-resize;
+  touch-action: none;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  transition: background-color 0.12s ease, border-color 0.12s ease, transform 0.12s ease;
+}
+
+.guide-border-control.is-width {
+  right: 2px;
+}
+
+.guide-border-control.is-opacity {
+  right: 54px;
+}
+
+.guide-border-control.is-radius {
+  right: 106px;
+}
+
+.guide-color-control {
+  --guide-color-current: #d7d3e2;
+  --guide-color-picker-x: 0%;
+  --guide-color-picker-y: 0%;
+  position: absolute;
+  top: -50px;
+  right: 158px;
+  z-index: 11;
+  display: none;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 14px;
+  background: rgba(16, 16, 19, 0.55);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45);
+  cursor: crosshair;
+  touch-action: none;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  transition: background-color 0.12s ease, border-color 0.12s ease, transform 0.12s ease;
+}
+
+.guide-border-control::before {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  top: 50%;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  content: "";
+  transform: translateY(-50%);
+}
+
+.guide-border-control.is-width::before {
+  background: #ff9f2d;
+}
+
+.guide-border-control.is-width::after {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: 12px;
+  height: 20px;
+  border-block: 2px solid rgba(255, 255, 255, 0.74);
+  content: "";
+}
+
+.guide-border-control.is-opacity::before {
+  left: 15px;
+  right: auto;
+  top: 13px;
+  width: 18px;
+  height: 22px;
+  border-radius: 50% 50% 54% 54%;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.95) 0 50%, rgba(255, 255, 255, 0.28) 50% 100%);
+  transform: rotate(45deg);
+}
+
+.guide-border-control.is-radius::before {
+  left: 12px;
+  right: auto;
+  top: 12px;
+  width: 22px;
+  height: 22px;
+  border: 4px solid #ff9f2d;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  border-radius: 13px 0 0 0;
+  background: transparent;
+  transform: none;
+}
+
+.guide-border-control.is-radius::after {
+  position: absolute;
+  right: 11px;
+  bottom: 11px;
+  width: 9px;
+  height: 9px;
+  border-right: 2px solid rgba(255, 255, 255, 0.82);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.82);
+  content: "";
+}
+
+.guide-border-popout {
+  position: absolute;
+  left: 50%;
+  bottom: 54px;
+  display: none;
+  width: 170px;
+  height: 38px;
+  align-items: center;
+  gap: 10px;
+  padding: 0 11px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 14px;
+  background: rgba(16, 16, 19, 0.72);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.42);
+  pointer-events: none;
+  transform: translateX(-50%);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+
+.guide-border-rail {
+  position: relative;
+  flex: 1;
+  height: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.guide-border-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--guide-border-value);
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.guide-border-control.is-width .guide-border-fill {
+  background: #ff9f2d;
+}
+
+.guide-border-control.is-radius .guide-border-fill {
+  background: #ff9f2d;
+}
+
+.guide-border-value {
+  min-width: 40px;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
+  text-align: right;
+}
+
+.guide-border-control:hover,
+.guide-border-control.is-dragging,
+.guide-color-control:hover,
+.guide-color-control.is-dragging {
+  background-color: rgba(0, 0, 0, 0.82);
+  border-color: rgba(255, 255, 255, 0.55);
+  transform: scale(1.04);
+}
+
+.guide-border-control.is-dragging .guide-border-popout {
+  display: flex;
+}
+
+.guide-color-control::before {
+  position: absolute;
+  left: 11px;
+  top: 10px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50% 48% 42% 50%;
+  background:
+    radial-gradient(circle at 66% 30%, rgba(16, 16, 19, 0.9) 0 10%, transparent 11%),
+    radial-gradient(circle at 37% 34%, #ff4f65 0 9%, transparent 10%),
+    radial-gradient(circle at 31% 65%, #ffcc3d 0 9%, transparent 10%),
+    radial-gradient(circle at 63% 70%, #39d98a 0 9%, transparent 10%),
+    conic-gradient(from 20deg, #ff4f65, #ffcc3d, #39d98a, #37a9ff, #a259ff, #ff4f65);
+  content: "";
+}
+
+.guide-color-control::after {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  width: 13px;
+  height: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 5px;
+  background: var(--guide-color-current);
+  content: "";
+}
+
+.guide-color-popout {
+  position: absolute;
+  left: 50%;
+  bottom: 54px;
+  display: none;
+  width: 164px;
+  height: 164px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  background: rgba(16, 16, 19, 0.76);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.48);
+  pointer-events: none;
+  transform: translateX(-50%);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+
+.guide-color-picker {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 11px;
+  background:
+    linear-gradient(to bottom, #ffffff 0%, rgba(255, 255, 255, 0) 48%, #000000 100%),
+    linear-gradient(90deg, #ff2d55, #ff9f0a, #ffea00, #34c759, #00c7ff, #5856d6, #bf5af2, #ff2d55);
+}
+
+.guide-color-picker-dot {
+  position: absolute;
+  left: var(--guide-color-picker-x);
+  top: var(--guide-color-picker-y);
+  width: 13px;
+  height: 13px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
+  transform: translate(-50%, -50%);
+}
+
+.guide-color-control.is-dragging .guide-color-popout {
+  display: block;
+}
+
+.guide-font-control,
+.guide-text-control {
+  --guide-text-value: 0%;
+  position: absolute;
+  top: -50px;
+  z-index: 11;
+  display: none;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 14px;
+  background: rgba(16, 16, 19, 0.55);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45);
+  cursor: ew-resize;
+  touch-action: none;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+.guide-text-overlay > .guide-color-control {
+  right: 2px;
+}
+
+.guide-font-control {
+  right: 54px;
+}
+
+.guide-text-control.is-size {
+  right: 106px;
+}
+
+.guide-text-control.is-shadow {
+  right: 158px;
+}
+
+.guide-text-control.is-curvex {
+  right: 210px;
+}
+
+.guide-text-control.is-curvey {
+  right: 262px;
+}
+
+.guide-font-control::before {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.92);
+  content: "Aa";
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.guide-text-control::before {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.guide-text-control.is-size::before {
+  content: "T+";
+}
+
+.guide-text-control.is-shadow::before {
+  content: "S";
+  text-shadow: 3px 3px 0 rgba(255, 159, 45, 0.8);
+}
+
+.guide-text-control.is-curvex::before {
+  content: "X~";
+}
+
+.guide-text-control.is-curvey::before {
+  content: "Y~";
+}
+
+.guide-text-popout,
+.guide-font-popout {
+  position: absolute;
+  left: 50%;
+  bottom: 54px;
+  display: none;
+  min-width: 170px;
+  height: 38px;
+  align-items: center;
+  gap: 10px;
+  padding: 0 11px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 14px;
+  background: rgba(16, 16, 19, 0.72);
+  color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.42);
+  pointer-events: none;
+  transform: translateX(-50%);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+
+.guide-font-popout {
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.guide-text-rail {
+  position: relative;
+  flex: 1;
+  height: 7px;
+  min-width: 92px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.guide-text-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--guide-text-value);
+  border-radius: inherit;
+  background: #ff9f2d;
+}
+
+.guide-text-value {
+  min-width: 38px;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
+  text-align: right;
+}
+
+.guide-font-control:hover,
+.guide-font-control.is-dragging,
+.guide-text-control:hover,
+.guide-text-control.is-dragging {
+  background-color: rgba(0, 0, 0, 0.82);
+  border-color: rgba(255, 255, 255, 0.55);
+  transform: scale(1.04);
+}
+
+.guide-text-control.is-dragging .guide-text-popout {
+  display: flex;
+}
+
+.guide-font-control.is-dragging .guide-font-popout {
+  display: flex;
+}
+
+.guide-tilt-control {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 10;
+  display: none;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.28), transparent 34%),
+    rgba(16, 16, 19, 0.52);
+  box-shadow:
+    0 9px 22px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.92);
+  cursor: grab;
+  touch-action: none;
+  transform: translate(-50%, -50%);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+
+.guide-tilt-control::before {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  content: "3D";
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+
+.guide-tilt-control::after {
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(255, 159, 45, 0.74);
+  border-radius: inherit;
+  content: "";
+  transform: rotateX(58deg) rotateZ(-26deg);
+}
+
+.guide-tilt-control:hover,
+.guide-tilt-control.is-dragging {
+  border-color: rgba(255, 255, 255, 0.62);
+  background-color: rgba(0, 0, 0, 0.78);
+  cursor: grabbing;
+  transform: translate(-50%, -50%) scale(1.04);
+}
+
+.guide-delete-handle:hover {
+  background-color: rgba(0, 0, 0, 0.82);
+  border-color: rgba(255, 255, 255, 0.55);
+  transform: scale(1.04);
+}
+
+body.guide-editing
+  :is(.guide-frame, .guide-card, .guide-detail, .guide-text-overlay):is(:hover, .is-selected)
+  > .guide-delete-handle {
+  display: block;
+}
+
+body.guide-editing
+  :is(.guide-frame, .guide-card, .guide-detail):is(:hover, .is-selected)
+  > .guide-border-control {
+  display: block;
+}
+
+body.guide-editing
+  :is(.guide-card, .guide-detail, .guide-text-overlay):is(:hover, .is-selected)
+  > .guide-color-control {
+  display: block;
+}
+
+body.guide-editing
+  :is(.guide-card, .guide-detail, .guide-text-overlay):is(:hover, .is-selected)
+  > .guide-tilt-control {
+  display: block;
+}
+
+body.guide-editing
+  .guide-text-overlay:is(:hover, .is-selected)
+  > :is(.guide-font-control, .guide-text-control) {
+  display: block;
+}
+
+.presentation-guide-layer.is-exiting .guide-text-overlay {
+  opacity: 0;
+}
+
+.guide-text-overlay.anim-glitch {
+  animation: guide-ov-glitch var(--overlay-anim-duration, 1.2s) steps(2, end) 1 both;
+}
+
+.guide-text-overlay.anim-rise {
+  animation: guide-ov-rise var(--overlay-anim-duration, 1.2s) ease-out 1 both;
+}
+
+.guide-text-overlay.anim-drop {
+  animation: guide-ov-drop var(--overlay-anim-duration, 1.2s) ease-out 1 both;
+}
+
+.guide-text-overlay.anim-slide {
+  animation: guide-ov-slide var(--overlay-anim-duration, 1.2s) ease-out 1 both;
+}
+
+@keyframes guide-ov-glitch {
+  0%, 100% {
+    transform: translate(0, 0);
+    clip-path: inset(0 0 0 0);
+    text-shadow: 0 0 transparent;
+  }
+  20% {
+    transform: translate(-2px, 1px);
+    text-shadow: 2px 0 #ff2d75, -2px 0 #2de2ff;
+  }
+  40% {
+    transform: translate(2px, -1px);
+    clip-path: inset(18% 0 32% 0);
+    text-shadow: -2px 0 #ff2d75, 2px 0 #2de2ff;
+  }
+  60% {
+    transform: translate(-1px, 0);
+    clip-path: inset(48% 0 12% 0);
+    text-shadow: 2px 0 #ff2d75, -2px 0 #2de2ff;
+  }
+  80% {
+    transform: translate(1px, 1px);
+    text-shadow: -2px 0 #ff2d75, 2px 0 #2de2ff;
+  }
+}
+
+@keyframes guide-ov-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(70px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes guide-ov-drop {
+  0% {
+    opacity: 0;
+    transform: translateY(-70px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes guide-ov-slide {
+  0% {
+    opacity: 0;
+    transform: translateX(var(--overlay-slide-from, -160px));
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+body.guide-paused .guide-frame {
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.72),
+    0 0 var(--guide-glow-spread) rgba(var(--guide-glow-color), var(--guide-glow-intensity)),
+    0 0 calc(var(--guide-glow-spread) * 1.75) rgba(var(--guide-glow-color), calc(var(--guide-glow-intensity) * 0.72));
+}
+
+body.guide-editing .presentation-guide-layer,
+body.guide-dragging .presentation-guide-layer {
+  pointer-events: auto;
+  user-select: none;
+}
+
+body.guide-editing .guide-scrim {
+  cursor: crosshair;
+}
+
+body.guide-editing .guide-frame,
+body.guide-editing .guide-card,
+body.guide-editing .guide-detail {
+  pointer-events: auto;
+  cursor: move;
+  touch-action: none;
+  transition: none;
+}
+
+body.guide-editing .guide-focus-drag {
+  display: block;
+  pointer-events: auto;
+}
+
+body.guide-dragging .guide-focus-drag {
+  cursor: grabbing;
+}
+
+body.guide-editing .guide-resize {
+  display: block;
+  pointer-events: auto;
+}
+
+body.guide-editing [contenteditable="true"] {
+  min-height: 1em;
+  border-radius: 4px;
+  cursor: text;
+  outline: 1px dashed rgba(216, 200, 255, 0.5);
+  outline-offset: 3px;
+  user-select: text;
+  touch-action: auto;
+}
+
+body.guide-editing [contenteditable="true"]:focus {
+  outline-color: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+body.guide-editing .guide-frame,
+body.guide-editing .guide-card,
+body.guide-editing .guide-detail,
+body.guide-dragging .guide-frame,
+body.guide-dragging .guide-card,
+body.guide-dragging .guide-detail,
+body.guide-dragging .guide-scrim {
+  transition: none;
+}

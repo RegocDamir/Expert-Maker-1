@@ -1,0 +1,1143 @@
+:root {
+  --capture-width: 1920px;
+  --capture-height: 1080px;
+  --capture-zoom: 1;
+  --app-panel-width: 500px;
+  --app-panel-height: 950px;
+  --capture-bg-base: #050505;
+  --capture-bg-accent-rgb: 151, 120, 255;
+  --capture-bg-x: 50%;
+  --capture-bg-y: 18%;
+  --capture-bg-spread: 38%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+  background: #050505;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.capture-stage {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+}
+
+.capture-scale {
+  width: var(--capture-width);
+  height: max(var(--capture-height), 100vh);
+  zoom: var(--capture-zoom);
+}
+
+.capture-desktop {
+  position: relative;
+  width: var(--capture-width);
+  height: max(var(--capture-height), 100vh);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at var(--capture-bg-x) var(--capture-bg-y), rgba(var(--capture-bg-accent-rgb), 0.18), transparent var(--capture-bg-spread)),
+    linear-gradient(180deg, color-mix(in srgb, var(--capture-bg-base) 88%, white 12%) 0%, var(--capture-bg-base) 100%);
+}
+
+.capture-background-effects {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.capture-bg-effect {
+  --bg-color-a: #ff4fd8;
+  --bg-color-b: #35f4ff;
+  --bg-hardness: 44%;
+  position: absolute;
+  min-width: 20px;
+  min-height: 20px;
+  mix-blend-mode: screen;
+  background:
+    radial-gradient(
+      ellipse at center,
+      var(--bg-color-a) 0%,
+      var(--bg-color-a) var(--bg-hardness),
+      var(--bg-color-b) 74%,
+      transparent 100%
+    );
+  will-change: transform;
+}
+
+.capture-bg-effect.is-blob {
+  border-radius: 52% 48% 61% 39% / 46% 58% 42% 54%;
+}
+
+.capture-bg-effect.is-ellipse {
+  border-radius: 999px;
+}
+
+.capture-bg-effect.is-rectangle {
+  border-radius: 11%;
+}
+
+.capture-bg-effect.is-diamond {
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+
+.capture-bg-effect.is-particles {
+  mix-blend-mode: screen;
+}
+
+.capture-bg-effect.is-particles span {
+  position: absolute;
+  display: block;
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+}
+
+.capture-app-layer {
+  position: absolute;
+  z-index: 1;
+  left: calc((var(--capture-width) - var(--app-panel-width)) / 2);
+  top: calc((var(--capture-height) - var(--app-panel-height)) / 2);
+  width: var(--app-panel-width);
+  height: var(--app-panel-height);
+  overflow: hidden;
+  transform-origin: 0 0;
+  transform: matrix(1, 0, 0, 1, 0, 0);
+  transition:
+    transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+body.guide-editing .capture-app-layer,
+body.guide-dragging .capture-app-layer {
+  transition: none;
+}
+
+.capture-frame {
+  display: block;
+  width: var(--app-panel-width);
+  height: var(--app-panel-height);
+  border: 0;
+  background: #050505;
+}
+
+.capture-controls {
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  z-index: 330000;
+  display: grid;
+  gap: 8px;
+  width: 500px;
+  max-width: calc(100vw - 24px);
+  padding: 7px 9px;
+  border: 1px solid rgba(219, 207, 255, 0.28);
+  border-radius: 8px;
+  background: rgba(9, 8, 14, 0.88);
+  box-shadow:
+    0 18px 46px rgba(0, 0, 0, 0.44),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transform: scale(0.86);
+  transform-origin: left bottom;
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+  scrollbar-color: rgba(176, 176, 186, 0.58) rgba(255, 255, 255, 0.06);
+  scrollbar-width: thin;
+}
+
+.capture-controls:has(.guide-editor-fields[hidden]) {
+  width: max-content;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.capture-controls::-webkit-scrollbar {
+  width: 7px;
+}
+
+.capture-controls::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+}
+
+.capture-controls::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(176, 176, 186, 0.58);
+}
+
+.capture-control-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+.capture-controls button,
+.capture-controls span,
+.capture-controls select,
+.capture-controls input {
+  min-height: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: #f6f2ff;
+  color-scheme: dark;
+  font: 600 12px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.capture-controls button,
+.capture-controls span {
+  display: inline-grid;
+  min-width: 28px;
+  place-items: center;
+}
+
+.capture-controls button {
+  min-height: 30px;
+  padding: 0 10px;
+  background: rgba(255, 255, 255, 0.13);
+  cursor: pointer;
+}
+
+.capture-controls button:hover {
+  border-color: rgba(219, 207, 255, 0.42);
+  background: rgba(255, 255, 255, 0.2);
+}
+.capture-controls button:disabled,
+.capture-controls button:disabled:hover {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(246, 242, 255, 0.34);
+  cursor: default;
+}
+
+.capture-controls button.is-active {
+  border-color: rgba(205, 183, 255, 0.72);
+  background: rgba(156, 100, 251, 0.28);
+}
+
+.capture-controls span {
+  min-width: 58px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(246, 242, 255, 0.88);
+}
+
+.capture-controls [data-guide-play],
+.capture-controls [data-guide-edit],
+.capture-controls [data-guide-reset] {
+  flex: 0 0 auto;
+  width: 92px;
+}
+
+.capture-export-group {
+  display: grid;
+  gap: 7px;
+  grid-column: 1 / -1;
+  min-width: 0;
+  margin: 0;
+  padding: 16px 8px 8px;
+  border: 1px solid rgba(255, 235, 235, 0.5);
+  border-radius: 8px;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255, 35, 35, 0.48) 0,
+      rgba(255, 35, 35, 0.48) 24px,
+      rgba(255, 86, 86, 0.34) 24px,
+      rgba(255, 86, 86, 0.34) 48px
+    );
+}
+
+.capture-export-group legend {
+  padding: 0 6px;
+  color: rgba(255, 245, 245, 0.95);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.capture-export-group .capture-control-row {
+  flex-wrap: wrap;
+}
+
+.guide-output-controls {
+  flex-wrap: wrap;
+}
+
+.guide-output-controls select {
+  flex: 0 0 78px;
+}
+
+.guide-output-controls input[type="number"] {
+  flex: 0 0 66px;
+}
+
+.guide-output-controls .guide-number-wrap {
+  flex: 0 0 66px;
+}
+
+.guide-export-status {
+  flex: 1 1 180px;
+  justify-content: start;
+  min-width: 180px;
+  padding: 0 10px;
+  color: rgba(246, 242, 255, 0.72);
+  text-align: left;
+}
+
+.guide-editor-fields {
+  display: grid;
+  grid-template-columns: minmax(248px, 1fr) minmax(190px, 0.82fr);
+  gap: 8px;
+  padding: 2px 1px 1px;
+}
+
+.guide-editor-fields[hidden] {
+  display: none;
+}
+
+.guide-editor-fields label {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  color: rgba(226, 217, 255, 0.88);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.guide-step-picker {
+  z-index: 2;
+  grid-column: 1 / -1;
+  min-width: 0;
+  padding: 7px 9px;
+  color: #f3edff;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.guide-step-row {
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+}
+
+.guide-step-actions {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.guide-step-actions button {
+  flex: 0 0 auto;
+  height: 30px;
+  min-width: max-content;
+  padding: 0 14px;
+  white-space: nowrap;
+}
+
+.guide-step-row select {
+  flex: 0 0 240px;
+  width: 240px;
+  height: 31px;
+}
+
+.guide-step-row button {
+  height: 30px;
+}
+
+.guide-editor-group {
+  --guide-group-rgb: 255, 255, 255;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px 16px;
+  min-width: 0;
+  margin: 0;
+  padding: 7px 9px;
+  position: relative;
+  padding-bottom: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(var(--guide-group-rgb), 0.27) 0,
+      rgba(var(--guide-group-rgb), 0.27) 24px,
+      rgba(var(--guide-group-rgb), 0.295) 24px,
+      rgba(var(--guide-group-rgb), 0.295) 48px
+    );
+}
+
+.guide-step-picker {
+  --guide-group-rgb: 22, 139, 255;
+}
+
+.guide-group-animation {
+  --guide-group-rgb: 79, 166, 79;
+}
+
+.guide-group-app {
+  --guide-group-rgb: 214, 150, 34;
+}
+
+.guide-group-overlay {
+  --guide-group-rgb: 156, 100, 251;
+  row-gap: 14px;
+  padding: 12px 12px 44px;
+}
+
+.guide-overlay-row {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(0, 1fr) max-content max-content;
+  gap: 10px;
+  align-items: center;
+}
+
+.guide-overlay-row button {
+  min-width: max-content;
+}
+
+.guide-overlay-text-row {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: 1fr;
+  gap: 0;
+  align-items: start;
+}
+
+.guide-overlay-text-row textarea {
+  width: 100%;
+  min-height: 46px;
+  padding: 8px 10px;
+  resize: vertical;
+  font: inherit;
+  line-height: 1.4;
+}
+
+.guide-overlay-font-row {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(0, 1fr) 1fr;
+  gap: 0;
+  align-items: center;
+}
+
+.guide-overlay-font-row select {
+  grid-column: 1;
+  width: 100%;
+  border: 0;
+}
+
+.guide-overlay-anim-row {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.guide-overlay-anim-row label {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: center;
+  gap: 6px;
+  color: rgba(226, 217, 255, 0.88);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.guide-group-background {
+  --guide-group-rgb: 122, 132, 158;
+}
+
+.guide-group-background.is-open {
+  padding-bottom: 30px;
+}
+
+.guide-group-frames {
+  --guide-group-rgb: 232, 121, 109;
+}
+
+.guide-group-cards {
+  --guide-group-rgb: 242, 194, 48;
+}
+
+.guide-group-title {
+  --guide-group-rgb: 23, 79, 122;
+}
+
+.guide-group-card-style {
+  --guide-group-rgb: 143, 212, 232;
+}
+
+.guide-group-body {
+  --guide-group-rgb: 240, 165, 31;
+}
+
+.guide-editor-group legend {
+  padding: 0 7px;
+  color: #dccdff;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.guide-group-animation,
+.guide-group-app,
+.guide-group-overlay,
+.guide-group-frames,
+.guide-group-card-style,
+.guide-group-body,
+.guide-history-controls {
+  grid-column: 1 / -1;
+}
+
+.guide-group-background {
+  grid-column: 1 / -1;
+}
+
+.guide-group-title {
+  grid-template-columns: 1fr;
+  align-content: start;
+  justify-items: end;
+  padding-left: 8px;
+}
+
+.guide-group-cards {
+  gap: 14px 16px;
+  padding: 9px 10px;
+}
+
+.guide-group-background.is-collapsed {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  min-height: 42px;
+  padding: 0 12px;
+  cursor: pointer;
+}
+
+.guide-group-background.is-collapsed legend {
+  pointer-events: none;
+}
+
+.guide-group-background.is-collapsed:not(.is-open) {
+  background:
+    linear-gradient(90deg, rgba(38, 41, 58, 0.88), rgba(34, 37, 52, 0.74), rgba(38, 41, 58, 0.88));
+}
+
+.guide-group-background .guide-bg-content {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px 16px;
+  padding: 7px 0 32px;
+  cursor: default;
+}
+
+.guide-group-background .guide-bg-content > .guide-field:nth-of-type(even) {
+  justify-self: end;
+}
+
+.guide-group-background:not(.is-open) .guide-bg-content {
+  display: none;
+}
+
+.guide-group-frames {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-flow: column;
+  grid-template-rows: repeat(6, auto);
+  column-gap: 18px;
+}
+
+.guide-field {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  gap: 6px;
+  align-items: center;
+  justify-self: start;
+  min-width: 0;
+  min-height: 47px;
+}
+
+.guide-field > label:first-child {
+  display: grid;
+  grid-template-columns: 86px 58px;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.guide-editor-group:not(.guide-group-frames):not(.guide-group-title) > .guide-field:nth-of-type(even) {
+  justify-self: end;
+}
+
+.guide-editor-group:not(.guide-group-frames):not(.guide-group-title) > .guide-field:nth-of-type(even) > label:first-child {
+  text-align: left;
+}
+
+.guide-group-title > .guide-field {
+  justify-self: end;
+}
+
+.guide-group-title > .guide-field > label:first-child {
+  grid-template-columns: 70px 58px;
+  gap: 3px;
+  text-align: left;
+}
+
+.guide-group-title > .guide-field + .guide-field {
+  margin-top: 22px;
+}
+
+.guide-group-frames > .guide-field {
+  justify-self: start;
+}
+
+.guide-group-frames > .guide-field > label:first-child {
+  grid-template-columns: 94px 58px;
+}
+.guide-group-frames > .guide-field:nth-of-type(n + 7):nth-of-type(-n + 10) > label:first-child {
+  text-indent: 4px;
+}
+
+.guide-field > .guide-editor-check:first-child {
+  grid-template-columns: 18px minmax(0, 1fr);
+}
+
+.guide-apply-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  justify-self: end;
+  min-height: 14px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: rgba(246, 242, 255, 0.42);
+  font-weight: 200;
+  font-size: 0;
+  line-height: 1;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.guide-apply-all::after {
+  content: "Apply To All";
+  font-size: 8px;
+  font-weight: 200;
+  line-height: 1.05;
+  text-align: left;
+}
+
+.guide-apply-all:has(input:checked) {
+  color: rgba(246, 242, 255, 0.72);
+}
+
+.guide-editor-group .guide-apply-group {
+  position: absolute;
+  right: 9px;
+  bottom: 3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: rgba(246, 242, 255, 0.42);
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.guide-editor-group .guide-apply-group {
+  min-height: 18px;
+  gap: 5px;
+}
+
+.guide-editor-group .guide-apply-group input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  min-height: 16px;
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+}
+
+.guide-editor-group .guide-apply-group span {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  min-height: 0;
+  padding: 0;
+  font-size: 10px;
+  font-weight: 200;
+  line-height: 1.05;
+  text-transform: none;
+}
+
+.guide-editor-group .guide-apply-group:has(input:checked) {
+  color: rgba(246, 242, 255, 0.72);
+}
+
+.guide-editor-fields .guide-editor-check,
+.guide-editor-fields [data-guide-add-box],
+.guide-editor-fields [data-guide-delete-box],
+.guide-editor-fields [data-guide-remove-image],
+.guide-editor-fields [data-guide-add-field],
+.guide-editor-fields .guide-history-controls {
+  min-width: 0;
+}
+
+.guide-editor-fields [data-guide-add-box],
+.guide-editor-fields [data-guide-delete-box],
+.guide-editor-fields [data-guide-remove-image],
+.guide-editor-fields [data-guide-add-field] {
+  justify-self: center;
+  width: 108px;
+  padding-inline: 7px;
+}
+
+.guide-history-controls button {
+  flex: 0 0 24%;
+}
+
+.guide-history-controls {
+  justify-content: center;
+  gap: 10px;
+}
+
+.guide-editor-fields .guide-editor-check {
+  grid-template-columns: 18px minmax(0, 1fr);
+  align-items: center;
+  gap: 7px;
+  min-height: 28px;
+}
+
+.guide-editor-fields select,
+.guide-editor-fields input {
+  width: 100%;
+  min-width: 0;
+  min-height: 28px;
+  padding: 0 8px;
+  background-color: #171421;
+  color: #f8f5ff;
+}
+
+.guide-editor-fields select option {
+  background: #15131d;
+  color: #ffffff;
+}
+
+/* Single source of truth for select chevrons: inset 6px from the right edge,
+   never flush to the border. */
+.capture-controls select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='10' viewBox='0 0 14 10'%3E%3Cpath d='M2 2.25 7 7.25l5-5' fill='none' stroke='%23f6f2ff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: calc(100% - 6px) 50%;
+  background-size: 12px 9px;
+  padding-right: 26px;
+}
+
+.guide-editor-fields input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  min-height: 14px;
+  padding: 0;
+  accent-color: #9c64fb;
+}
+
+.guide-editor-fields input[type="color"] {
+  height: 28px;
+  padding: 2px 3px;
+}
+
+.guide-bg-layer-row {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(0, 1fr) max-content max-content;
+  gap: 10px;
+  align-items: center;
+}
+
+.guide-bg-layer-row button {
+  min-width: max-content;
+}
+
+.guide-bg-range-row {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: 86px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  color: rgba(226, 217, 255, 0.88);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.guide-bg-range-stack {
+  position: relative;
+  min-height: 30px;
+}
+
+.guide-bg-range-stack {
+  --range-start: 0%;
+  --range-end: 100%;
+}
+
+.guide-bg-range-stack::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(216, 200, 255, 0.28);
+  transform: translateY(-50%);
+}
+.guide-bg-range-stack::after {
+  content: "";
+  position: absolute;
+  left: var(--range-start);
+  right: calc(100% - var(--range-end));
+  top: 50%;
+  z-index: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(216, 200, 255, 0.58);
+  box-shadow: 0 0 12px rgba(156, 100, 251, 0.34);
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.guide-bg-range-stack input[type="range"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  min-height: 30px;
+  padding: 0;
+  border: 0;
+  appearance: none;
+  background: transparent;
+  pointer-events: none;
+  accent-color: #d8c8ff;
+}
+
+.guide-bg-range-stack input[data-guide-bg-layer-size-min-range] {
+  z-index: 3;
+}
+
+.guide-bg-range-stack input[data-guide-bg-layer-size-max-range] {
+  z-index: 2;
+}
+
+.guide-bg-range-stack input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  border: 0;
+  background: transparent;
+}
+
+.guide-bg-range-stack input[type="range"]::-webkit-slider-thumb {
+  width: 15px;
+  height: 15px;
+  margin-top: -5.5px;
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 999px;
+  background: #d8c8ff;
+  box-shadow: 0 0 0 2px rgba(15, 13, 23, 0.88);
+  pointer-events: auto;
+}
+
+.guide-bg-range-stack input[type="range"]:focus-visible::-webkit-slider-thumb,
+.guide-bg-range-stack input[type="range"]:hover::-webkit-slider-thumb {
+  background: #f6f2ff;
+}
+
+.guide-bg-range-stack input[type="range"]::-moz-range-track {
+  height: 4px;
+  border: 0;
+  background: transparent;
+}
+
+.guide-bg-range-stack input[type="range"]::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 999px;
+  background: #d8c8ff;
+  box-shadow: 0 0 0 2px rgba(15, 13, 23, 0.88);
+  pointer-events: auto;
+}
+
+.capture-controls .guide-number-wrap {
+  position: relative;
+  display: block;
+  min-width: 0;
+  min-height: 46px;
+  border: 0;
+  background: transparent;
+  overflow: visible;
+  align-content: center;
+}
+
+.capture-controls .guide-number-wrap input[type="number"] {
+  display: block;
+  width: 100%;
+  appearance: textfield;
+}
+
+.capture-controls .guide-number-wrap input[type="number"]::-webkit-outer-spin-button,
+.capture-controls .guide-number-wrap input[type="number"]::-webkit-inner-spin-button {
+  margin: 0;
+  appearance: none;
+}
+
+.capture-controls .guide-number-step {
+  position: absolute;
+  right: 0;
+  z-index: 50;
+  display: grid;
+  width: 28px;
+  min-width: 28px;
+  height: 22px;
+  min-height: 22px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid rgba(219, 207, 255, 0.42);
+  border-radius: 0;
+  background: rgba(22, 19, 32, 0.96);
+  opacity: 0;
+  pointer-events: none;
+  touch-action: none;
+  transform: translateX(-4px);
+  transform-origin: center;
+  transition:
+    opacity 220ms ease 360ms,
+    transform 180ms ease 360ms;
+}
+
+.capture-controls .guide-number-step::before {
+  content: "";
+  width: 0;
+  height: 0;
+  border-inline: 7px solid transparent;
+}
+
+.capture-controls .guide-number-step.is-up {
+  top: 1px;
+  border-radius: 0 5px 0 0;
+}
+
+.capture-controls .guide-number-step.is-up::before {
+  border-bottom: 9px solid rgba(246, 242, 255, 0.94);
+}
+
+.capture-controls .guide-number-step.is-down {
+  top: 23px;
+  border-top-width: 0;
+  border-radius: 0 0 5px 0;
+}
+
+.capture-controls .guide-number-step.is-down::before {
+  border-top: 9px solid rgba(246, 242, 255, 0.94);
+}
+
+.capture-controls .guide-number-wrap:hover .guide-number-step,
+.capture-controls .guide-number-wrap:focus-within .guide-number-step,
+.capture-controls .guide-number-step:hover,
+.capture-controls .guide-number-step:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+  transition-delay: 0ms;
+}
+
+.capture-controls .guide-number-step:hover,
+.capture-controls .guide-number-step:focus-visible {
+  border-color: rgba(219, 207, 255, 0.62);
+  background: rgba(22, 19, 32, 0.98);
+}
+
+
+body.guide-editing .capture-controls {
+  top: 12px;
+  bottom: auto;
+  height: calc(116.28vh - 27.91px);
+  max-height: none;
+  align-content: start;
+  grid-auto-rows: max-content;
+  transform-origin: left top;
+}
+body.capture-controls-hidden .capture-controls {
+  display: none;
+}
+
+body.capture-output .capture-controls,
+body.capture-render .capture-controls {
+  display: none;
+}
+
+.capture-controls button,
+.capture-controls select,
+.capture-controls input,
+.capture-controls textarea,
+.capture-controls label,
+.capture-controls span {
+  font-size: 14px;
+}
+
+.capture-controls button,
+.capture-controls select,
+.capture-controls input {
+  min-height: 30px;
+}
+
+.capture-controls button {
+  min-height: 32px;
+  padding-inline: 15px;
+}
+
+.capture-controls [data-guide-play],
+.capture-controls [data-guide-edit],
+.capture-controls [data-guide-reset] {
+  width: 97px;
+}
+
+.guide-editor-fields select,
+.guide-editor-fields input {
+  min-height: 30px;
+  padding-inline: 13px;
+}
+
+.guide-editor-fields input[type="color"] {
+  height: 30px;
+  padding-inline: 5px;
+}
+
+.guide-editor-group legend,
+.capture-export-group legend {
+  font-size: 14px;
+}
+
+.guide-editor-fields label,
+.guide-overlay-anim-row label,
+.guide-bg-range-row {
+  font-size: 14px;
+}
+
+.guide-editor-fields [data-guide-add-box],
+.guide-editor-fields [data-guide-delete-box],
+.guide-editor-fields [data-guide-remove-image],
+.guide-editor-fields [data-guide-add-field] {
+  width: 113px;
+  padding-inline: 12px;
+}
+
+.guide-output-controls select {
+  flex-basis: 83px;
+}
+
+.guide-output-controls input[type="number"],
+.guide-output-controls .guide-number-wrap {
+  flex-basis: 71px;
+}
+
+.guide-export-status {
+  min-width: 185px;
+  padding-inline: 15px;
+}
+
+.capture-controls button,
+.capture-controls select,
+.capture-controls input {
+  min-height: 32px;
+}
+
+.capture-controls button {
+  min-height: 34px;
+  padding-inline: 20px;
+}
+
+.capture-controls [data-guide-play],
+.capture-controls [data-guide-edit],
+.capture-controls [data-guide-reset] {
+  width: 102px;
+}
+
+.guide-editor-fields select,
+.guide-editor-fields input {
+  min-height: 32px;
+  padding-inline: 18px;
+}
+
+.guide-editor-fields input[type="color"] {
+  height: 32px;
+  padding-inline: 7px;
+}
+
+.guide-overlay-text-row textarea {
+  min-height: 50px;
+  padding: 10px 15px;
+}
+
+.guide-step-actions button,
+.guide-overlay-row button,
+.guide-bg-layer-row button,
+.capture-export-group button {
+  padding-inline: 20px;
+}
+
+.guide-step-row select {
+  height: 33px;
+}
+
+.guide-editor-fields [data-guide-add-box],
+.guide-editor-fields [data-guide-delete-box],
+.guide-editor-fields [data-guide-remove-image],
+.guide-editor-fields [data-guide-add-field] {
+  width: 118px;
+  padding-inline: 17px;
+}
+
+.guide-output-controls select {
+  flex-basis: 88px;
+}
+
+.guide-output-controls input[type="number"],
+.guide-output-controls .guide-number-wrap {
+  flex-basis: 76px;
+}
+
+
+
+
+
+

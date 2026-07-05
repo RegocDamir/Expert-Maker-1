@@ -1,0 +1,13 @@
+﻿{
+  "name": "expert-maker-overlay",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "studio": "node scripts/export-studio.mjs",
+    "export": "node scripts/export-video.mjs",
+    "export:video": "node scripts/export-video.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.56.0"
+  }
+}

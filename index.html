@@ -1,0 +1,193 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Expert Maker Overlay</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,700;1,400&family=Lilita+One&family=Lora:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@400;700;900&family=Oswald:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@400;700;900&family=Roboto:ital,wght@0,400;0,700;1,400&display=swap">
+    <link rel="stylesheet" href="css/capture.css">
+    <link rel="stylesheet" href="css/presentation-guide.css">
+    <link rel="stylesheet" href="css/expert-maker.css">
+  </head>
+  <body>
+    <div class="capture-controls" aria-label="Overlay and guide controls">
+      <div class="capture-control-row" aria-label="Presentation guide controls">
+        <button type="button" data-guide-play>Pause</button>
+        <button type="button" data-guide-edit>Edit</button>
+        <button type="button" data-guide-reset title="Reset saved edits for this step" hidden>Reset edits</button>
+      </div>
+      <div class="guide-editor-fields" data-guide-editor hidden>
+        <fieldset class="guide-editor-group guide-step-picker">
+          <legend>Step</legend>
+          <div class="guide-step-row">
+            <select data-guide-step aria-label="Step"></select>
+            <div class="guide-step-actions">
+              <button type="button" data-guide-add-step>Add step</button>
+              <button type="button" data-guide-delete-step>Delete step</button>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset class="guide-editor-group guide-group-animation">
+          <legend>Animation</legend>
+          <div class="guide-field"><label>Appear <input type="number" min="0" max="10" step="0.1" data-guide-appear></label><label class="guide-apply-all"><input type="checkbox" data-guide-apply-all="timing.appear"></label></div>
+          <div class="guide-field"><label>Stay <input type="number" min="0" max="60" step="0.5" data-guide-stay></label><label class="guide-apply-all"><input type="checkbox" data-guide-apply-all="timing.stay"></label></div>
+          <div class="guide-field"><label>Disappear <input type="number" min="0" max="10" step="0.1" data-guide-disappear></label><label class="guide-apply-all"><input type="checkbox" data-guide-apply-all="timing.disappear"></label></div>
+          <div class="guide-field"><label>Zoom <input type="number" min="1" max="5" step="0.05" data-guide-focus-zoom></label><label class="guide-apply-all"><input type="checkbox" data-guide-apply-all="focus.zoom"></label></div>
+        </fieldset>
+        <fieldset class="guide-editor-group guide-group-app">
+          <legend>Target</legend>
+          <div class="guide-field"><label>Target width <input type="number" min="240" max="1920" step="1" data-guide-app-width></label></div>
+          <div class="guide-field"><label>Target height <input type="number" min="240" max="1600" step="1" data-guide-app-height></label></div>
+        </fieldset>
+        <fieldset class="guide-editor-group guide-group-background">
+          <legend>Background</legend>
+          <div class="guide-field"><label>Base color <input type="color" data-guide-bg-color></label></div>
+          <div class="guide-field"><label>Glow color <input type="color" data-guide-bg-accent></label></div>
+          <div class="guide-field"><label>Glow X <input type="number" min="0" max="100" step="1" data-guide-bg-x></label></div>
+          <div class="guide-field"><label>Glow Y <input type="number" min="0" max="100" step="1" data-guide-bg-y></label></div>
+          <div class="guide-field"><label>Glow spread <input type="number" min="8" max="120" step="1" data-guide-bg-spread></label></div>
+          <div class="guide-bg-layer-row">
+            <select data-guide-bg-layer aria-label="Background layer type"></select>
+            <button type="button" data-guide-bg-add-layer>Add layer</button>
+            <button type="button" data-guide-bg-delete-layer>Delete layer</button>
+          </div>
+          <div class="guide-field"><label>Color A <input type="color" data-guide-bg-layer-color-a></label></div>
+          <div class="guide-field"><label>Color B <input type="color" data-guide-bg-layer-color-b></label></div>
+          <div class="guide-field"><label>X <input type="number" min="0" max="100" step="1" data-guide-bg-layer-x></label></div>
+          <div class="guide-field"><label>Y <input type="number" min="0" max="100" step="1" data-guide-bg-layer-y></label></div>
+          <div class="guide-field"><label>Wide <input type="number" min="20" max="200" step="1" data-guide-bg-layer-width></label></div>
+          <div class="guide-field"><label>Narrow <input type="number" min="20" max="200" step="1" data-guide-bg-layer-height></label></div>
+          <div class="guide-field"><label>Rotate <input type="number" min="-180" max="180" step="1" data-guide-bg-layer-rotate></label></div>
+          <div class="guide-field"><label>Opacity <input type="number" min="0" max="1" step="0.05" data-guide-bg-layer-opacity></label></div>
+          <div class="guide-field"><label>Hardness <input type="number" min="0" max="100" step="1" data-guide-bg-layer-hardness></label></div>
+          <div class="guide-field"><label>Blur <input type="number" min="0" max="160" step="1" data-guide-bg-layer-blur></label></div>
+          <div class="guide-field"><label>Count <input type="number" min="1" max="160" step="1" data-guide-bg-layer-count></label></div>
+          <div class="guide-bg-range-row">
+            <span>Size range</span>
+            <div class="guide-bg-range-stack">
+              <input type="range" min="1" max="240" step="1" value="6" aria-label="Size range minimum" data-guide-bg-layer-size-min-range>
+              <input type="range" min="1" max="240" step="1" value="28" aria-label="Size range maximum" data-guide-bg-layer-size-max-range>
+            </div>
+          </div>
+          <div class="guide-field"><label>Size min <input type="number" min="1" max="180" step="1" data-guide-bg-layer-size-min></label></div>
+          <div class="guide-field"><label>Size max <input type="number" min="1" max="240" step="1" data-guide-bg-layer-size-max></label></div>
+        </fieldset>
+        <fieldset class="capture-export-group">
+          <legend>EXPORT VIDEO</legend>
+          <div class="capture-control-row target-controls" aria-label="Target controls">
+            <label class="target-file-button">Load screenshot<input type="file" accept="image/*" data-target-image></label>
+            <input type="url" placeholder="Page URL" aria-label="Page URL" data-target-url>
+            <button type="button" data-target-load-url>Load URL</button>
+            <button type="button" data-target-clear>Clear target</button>
+          </div>
+          <div class="capture-control-row guide-output-controls" aria-label="Output controls">
+            <button type="button" data-guide-open-output>OBS output</button>
+            <select data-guide-render-preset aria-label="Render resolution">
+              <option value="1920x1080">1080p</option>
+              <option value="2560x1440">1440p</option>
+              <option value="3840x2160">4K</option>
+              <option value="custom">Custom</option>
+            </select>
+            <input type="number" min="640" max="7680" step="1" value="1920" aria-label="Render width" data-guide-render-width>
+            <input type="number" min="360" max="4320" step="1" value="1080" aria-label="Render height" data-guide-render-height>
+            <button type="button" data-guide-render-video>Render MP4</button>
+            <button type="button" data-guide-export-data>Export data</button>
+            <span class="guide-export-status" data-guide-export-status hidden></span>
+          </div>
+        </fieldset>
+        <fieldset class="guide-editor-group guide-group-overlay">
+          <legend>Free Text Overlay</legend>
+          <div class="guide-overlay-row">
+            <select data-guide-overlay-select aria-label="Text overlay"></select>
+            <button type="button" data-guide-overlay-add>Add text</button>
+            <button type="button" data-guide-overlay-delete>Delete text</button>
+          </div>
+          <label class="guide-overlay-text-row"><textarea rows="2" data-guide-overlay-text placeholder="Type overlay text…"></textarea></label>
+          <label class="guide-overlay-font-row"><select data-guide-overlay-font aria-label="Font"></select></label>
+          <div class="guide-overlay-anim-row">
+            <label>Animation
+              <select data-guide-overlay-anim>
+                <option value="none">None</option>
+                <option value="glitch">Glitch</option>
+                <option value="rise">Rise up</option>
+                <option value="drop">Drop in</option>
+                <option value="slide-left">Slide in from left</option>
+                <option value="slide-right">Slide in from right</option>
+              </select>
+            </label>
+          </div>
+          <div class="guide-field"><label>Size <input type="number" min="8" max="400" step="1" data-guide-overlay-size></label></div>
+          <div class="guide-field"><label>Color <input type="color" data-guide-overlay-color></label></div>
+          <div class="guide-field"><label>Speed <input type="number" min="0.2" max="8" step="0.1" data-guide-overlay-anim-speed></label></div>
+          <div class="guide-field"><label>Shadow <input type="number" min="0" max="100" step="1" data-guide-overlay-shadow></label></div>
+          <div class="guide-field"><label>3D tilt X <input type="number" min="-80" max="80" step="1" data-guide-overlay-tilt-x></label></div>
+          <div class="guide-field"><label>3D tilt Y <input type="number" min="-80" max="80" step="1" data-guide-overlay-tilt-y></label></div>
+        </fieldset>
+        <fieldset class="guide-editor-group guide-group-frames">
+          <legend>Frames</legend>
+          <div class="guide-field"><label>Frame color <input type="color" data-guide-frame-color></label><label class="guide-apply-all"><input type="checkbox" data-guide-apply-all="style.color"></label></div>
+          <div class="guide-field"><label>Frame px <input type="number" min="0" max="20" step="1" data-guide-frame-width></label><label class="guide-apply-all"><input type="checkbox" data-guide-apply-all="style.width"></label></div>
+          <div class="guide-field"><label>Border radius <input type="number" min="0" max="60" step="1" data-guide-frame-radius></label><label class="guide-apply-all"><input type="checkbox" data-guide-apply-all="style.radius"></label></div>
+          <div class="guide-field"><label>Glow color <input type="color" data-guide-glow-color></label><label class="guide-apply-all"><input type="checkbox" data-guide-apply-all="style.glowColor"></label></div>
+          <div class="guide-field"><label>Glow spread <input type="number" min="0" max="120" step="1" data-guide-glow-spread></label><label class="guide-apply-all"><input type="checkbox" data-guide-apply-all="style.glowSpread"></label></div>
+          <div class="guide-field"><label>Glow intensity <input type="number" min="0" max="1" step="0.05" data-guide-glow-intensity></label><label class="guide-apply-all"><input type="checkbox" data-guide-apply-all="style.glowIntensity"></label></div>
+          <div class="guide-field"><label>Second px <input type="number" min="0" max="20" step="1" data-guide-outer-width></label><label class="guide-apply-all"><input type="checkbox" data-guide-apply-all="style.outerWidth"></label></div>
+          <div class="guide-field"><label>Second color <input type="color" data-guide-outer-color></label><label class="guide-apply-all"><input type="checkbox" data-guide-apply-all="style.outerColor"></label></div>
+          <div class="guide-field"><label>Second radius <input type="number" min="0" max="80" step="1" data-guide-outer-radius></label><label class="guide-apply-all"><input type="checkbox" data-guide-apply-all="style.outerRadius"></label></div>
+          <div class="guide-field"><label>Second gap <input type="number" min="0" max="40" step="1" data-guide-outer-gap></label><label class="guide-apply-all"><input type="checkbox" data-guide-apply-all="style.outerGap"></label></div>
+        </fieldset>
+        <fieldset class="guide-editor-group guide-group-cards">
+          <legend>Cards</legend>
+          <button type="button" data-guide-add-box>Add card</button>
+          <button type="button" data-guide-delete-box>Delete selected card</button>
+          <button type="button" data-guide-add-field="title">Add title</button>
+          <button type="button" data-guide-add-field="number">Add number</button>
+          <button type="button" data-guide-add-field="emoji">Add emoji</button>
+          <button type="button" data-guide-add-field="image">Add image</button>
+          <button type="button" data-guide-remove-image>Remove image</button>
+        </fieldset>
+        <fieldset class="guide-editor-group guide-group-title">
+          <legend>Title</legend>
+          <div class="guide-field"><label>Title color <input type="color" data-guide-title-color></label><label class="guide-apply-all"><input type="checkbox" data-guide-apply-all="style.titleColor"></label></div>
+          <div class="guide-field"><label>Title px <input type="number" min="8" max="72" step="1" data-guide-title-size></label><label class="guide-apply-all"><input type="checkbox" data-guide-apply-all="style.titleSize"></label></div>
+        </fieldset>
+        <fieldset class="guide-editor-group guide-group-card-style">
+          <legend>Card Style</legend>
+          <div class="guide-field"><label>Border px <input type="number" min="0" max="20" step="1" data-guide-card-border-width></label><label class="guide-apply-all"><input type="checkbox" data-guide-apply-all="style.cardBorderWidth"></label></div>
+          <div class="guide-field"><label>Border color <input type="color" data-guide-card-border-color></label><label class="guide-apply-all"><input type="checkbox" data-guide-apply-all="style.cardBorderColor"></label></div>
+          <div class="guide-field"><label>Corner radius <input type="number" min="0" max="60" step="1" data-guide-card-radius></label><label class="guide-apply-all"><input type="checkbox" data-guide-apply-all="style.cardRadius"></label></div>
+          <div class="guide-field"><label>Background color <input type="color" data-guide-card-bg></label><label class="guide-apply-all"><input type="checkbox" data-guide-apply-all="style.cardBg"></label></div>
+        </fieldset>
+        <fieldset class="guide-editor-group guide-group-body">
+          <legend>Body Text</legend>
+          <div class="guide-field"><label>Body color <input type="color" data-guide-copy-color></label><label class="guide-apply-all"><input type="checkbox" data-guide-apply-all="style.copyColor"></label></div>
+          <div class="guide-field"><label>Body px <input type="number" min="8" max="48" step="1" data-guide-copy-size></label><label class="guide-apply-all"><input type="checkbox" data-guide-apply-all="style.copySize"></label></div>
+          <div class="guide-field"><label>Number color <input type="color" data-guide-number-color></label><label class="guide-apply-all"><input type="checkbox" data-guide-apply-all="style.numberColor"></label></div>
+          <div class="guide-field"><label>Number bg <input type="color" data-guide-number-bg></label><label class="guide-apply-all"><input type="checkbox" data-guide-apply-all="style.numberBg"></label></div>
+        </fieldset>
+        <div class="capture-control-row guide-history-controls">
+          <button type="button" data-guide-undo>Undo</button>
+          <button type="button" data-guide-redo>Redo</button>
+        </div>
+      </div>
+    </div>
+
+    <main class="capture-stage" aria-label="Expert Maker overlay stage">
+      <div class="capture-scale">
+        <div class="capture-desktop">
+          <div class="capture-background-effects" data-background-effects aria-hidden="true"></div>
+          <div class="capture-app-layer" data-app-layer>
+            <iframe class="capture-frame" src="target.html" title="Expert Maker target surface"></iframe>
+          </div>
+          <div class="presentation-guide-layer" data-guide-layer hidden></div>
+        </div>
+      </div>
+    </main>
+
+    <script src="capture.js"></script>
+    <script src="presentation-guide.js"></script>
+    <script src="expert-maker.js"></script>
+  </body>
+</html>

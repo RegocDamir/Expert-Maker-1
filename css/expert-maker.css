@@ -1,0 +1,36 @@
+﻿.target-controls {
+  flex-wrap: wrap;
+}
+
+.target-controls input[type="url"] {
+  flex: 1 1 220px;
+  min-width: 190px;
+  padding: 0 15px;
+  background: #171421;
+}
+
+.target-file-button {
+  display: inline-grid;
+  min-height: 38.5px;
+  padding: 0 19px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.13);
+  color: #f6f2ff;
+  cursor: pointer;
+  font: 500 16px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.target-file-button:hover {
+  border-color: rgba(219, 207, 255, 0.42);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.target-file-button input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
